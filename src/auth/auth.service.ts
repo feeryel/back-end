@@ -44,10 +44,13 @@ export class AuthService {
       lastName: userData.lastName,
       role: userData.role,
     };
-    return {
+    const result = {
+      
       access_token: await this.jwtService.signAsync(payload, {
         secret: process.env.JWT_SECRET,
       }),
     };
+    console.log(result.access_token);
+    return result;
   }
 }

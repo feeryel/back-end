@@ -22,6 +22,7 @@ import { UserService } from './user.service';
 import { Request } from 'express';
 import { Roles } from 'src/auth/roles.decorator';
 import { Role } from 'src/auth/role.enum';
+import { UseLoginDto } from './dto/user-login.dto';
 
 @Controller()
 export class UserController {
@@ -78,10 +79,10 @@ export class UserController {
   // path : /login
   @Post('user/login')
   // @UseGuards(JwtAuthGuard)
-  async login(@Body() createUserDto: CreateUserDto) {
+  async login(@Body() userlogindto: UseLoginDto) {
     return await this.authService.login(
-      createUserDto.email,
-      createUserDto.password,
+      userlogindto.email,
+      userlogindto.password,
     );
   }
   //   @Get method
@@ -90,7 +91,8 @@ export class UserController {
   @UseGuards(JwtAuthGuard)
   @Get('user/current')
   async currentUser(@GetUser() user: User) {
-    return user;
+    const currentUser = await this.userService.getUser(user.id);
+    return currentUser;
   }
   //   @Get method
   // Get query user

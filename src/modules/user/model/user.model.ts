@@ -20,9 +20,9 @@ export class User extends Node {
   birthday: Date;
   @Column({ nullable: true })
   profileimage: string;
-  @Column()
+  @Column({ nullable: true })
   bannerimage: string;
-  @Column()
+  @Column({ nullable: true })
   biography: string;
   @Column({
     enum: Role,
