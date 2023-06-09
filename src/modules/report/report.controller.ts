@@ -13,7 +13,6 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { SearchService } from './../search/search.service';
 import { CreateReportDto } from './dto/report-create.dto';
 import { UpdateReportDto } from './dto/report-update.dto';
 import { ReportService } from './report.service';
@@ -22,11 +21,12 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { Role } from 'src/auth/role.enum';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { User } from '../user/model/user.model';
+import { ElasticsearchService } from '../elasticsearch.service';
 @Controller()
 export class ReportController {
   constructor(
     private readonly reportService: ReportService,
-    private readonly searchService: SearchService,
+    private readonly elasticsearchService: ElasticsearchService,
   ) {}
 
   //   @Post method
@@ -38,6 +38,9 @@ export class ReportController {
       createReportDto,
       user,
     );
+    const elasticdto: Report = creation;
+    await this.elasticsearchService.indexData('reports', elasticdto);
+
     if (!creation) {
       throw new BadRequestException('Something bad happened', {
         cause: new Error(),
@@ -74,7 +77,7 @@ export class ReportController {
   //   @put method
   // update report
   // path : :id/update
-  @Put('report/:id/update')
+  @Post('report/:id/update')
   async updateReport(
     @Param('id') id: string,
     @Body() updateReportDto: UpdateReportDto,
@@ -89,11 +92,5 @@ export class ReportController {
   // @SetMetadata('role', [Role.Admin])
   async getAllReports(): Promise<Report[]> {
     return await this.reportService.getAllReports();
-  }
-
-  @Post('report/search')
-  async search(@Body() body) {
-    console.log(body.data);
-    return await this.searchService.search(body.data);
   }
 }

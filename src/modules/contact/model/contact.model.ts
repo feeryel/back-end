@@ -7,8 +7,7 @@ export class Contact extends Node {
   Name: string;
   @Column()
   email: string;
-  @Column()
-  organisation: string;
+
   @Column()
   subject: string;
   @Column()

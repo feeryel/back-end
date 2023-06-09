@@ -1,4 +1,4 @@
-import { IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, IsOptional } from 'class-validator';
 
 export class CreateReportDto {
   @IsNotEmpty()
@@ -7,6 +7,8 @@ export class CreateReportDto {
   readonly email: string;
   @IsNotEmpty()
   readonly description: string;
-  @IsNotEmpty()
+  @IsOptional()
   readonly image: string;
+  @IsOptional()
+  readonly status: string;
 }

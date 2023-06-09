@@ -5,8 +5,7 @@ export class CreateContactDto {
   readonly Name: string;
   @IsNotEmpty()
   readonly email: string;
-  @IsNotEmpty()
-  readonly organisation: string;
+
   @IsNotEmpty()
   readonly subject: string;
   @IsNotEmpty()

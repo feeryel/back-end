@@ -12,6 +12,9 @@ export interface JwtPayload {
   email: string;
   firstName: string;
   lastName: string;
+  birthday: Date;
+  profileimage: string;
+  bannerimage: string;
   role: string[];
 }
 @Injectable()
@@ -43,6 +46,9 @@ export class AuthService {
       firstName: userData.firstName,
       lastName: userData.lastName,
       role: userData.role,
+      birthday: userData.birthday,
+      profileimage: userData.profileimage,
+      bannerimage: userData.bannerimage,
     };
     return {
       access_token: await this.jwtService.signAsync(payload, {

@@ -61,7 +61,7 @@ export class UserController {
   // get one user
   // path : :id/user
   @Get('user/:id/user')
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   // @SetMetadata('role', [Role.Admin])
   async getUser(@Param('id') id: string) {
     return await this.userService.getUser(id);

@@ -1,36 +1,23 @@
-import { ConfigService } from '@nestjs/config';
-import { Injectable } from '@nestjs/common';
-import { ElasticsearchService } from '@nestjs/elasticsearch';
-
-type dataResponse = {
-  id: string;
-  typeBug: string;
-  email: string;
-};
+import { Injectable, Inject } from '@nestjs/common';
+import { Client } from '@elastic/elasticsearch';
+import { OnEvent } from '@nestjs/event-emitter';
 
 @Injectable()
 export class SearchService {
   constructor(
-    private readonly esService: ElasticsearchService,
-    private readonly configService: ConfigService,
+    @Inject('ELASTICSEARCH') private readonly elasticSearchClient: Client,
   ) {}
 
-  async search(search: { key: string }) {
-    let results = new Set();
-    const response = await this.esService.search({
-      index: this.configService.get('ELASTICSEARCH_INDEX'),
+  async search(index: string, query: any) {
+    const { body } = await this.elasticSearchClient.search({
+      index,
       body: {
-        size: 50,
-        query: {
-          match_phrase: search,
-        },
+        query,
+        fuzziness: 'auto',
+        operator: 'and',
       },
     });
-    const hits = response.hits.hits;
-    hits.map((item) => {
-      results.add(item._source as dataResponse);
-    });
 
-    return { results: Array.from(results), total: response.hits.total };
+    return body.hits.hits;
   }
 }

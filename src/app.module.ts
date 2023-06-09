@@ -7,11 +7,12 @@ import { AuthModule } from './auth/auth.module';
 import { PostModule } from './modules/post/post.module';
 import { ContactModule } from './modules/contact/contact.module';
 import { ReportModule } from './modules/report/report.module';
-
+import { Client } from '@elastic/elasticsearch';
 import { RolesGuard } from './auth/roles.guard.';
 import { APP_GUARD } from '@nestjs/core';
-import { SearchModule } from './modules/search/search.module';
 
+
+const elasticSearchClient = new Client({ node: 'http://localhost:9200' });
 @Module({
   imports: [
     TypeOrmModule.forRootAsync({
@@ -24,12 +25,15 @@ import { SearchModule } from './modules/search/search.module';
     AuthModule,
     ContactModule,
     ReportModule,
-    SearchModule,
   ],
   providers: [
     {
       provide: APP_GUARD,
       useClass: RolesGuard,
+    },
+    {
+      provide: 'ELASTICSEARCH',
+      useValue: elasticSearchClient,
     },
   ],
 })

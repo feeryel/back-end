@@ -4,6 +4,8 @@ import { Column, Entity } from 'typeorm';
 @Entity()
 export class Report extends Node {
   @Column()
+  id: string;
+  @Column()
   typeBug: string;
   @Column()
   email: string;
@@ -11,4 +13,6 @@ export class Report extends Node {
   description: string;
   @Column()
   image: string;
+  @Column({ nullable: true, default: 'En cours' })
+  status: string;
 }
